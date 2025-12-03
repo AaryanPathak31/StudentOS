@@ -1,0 +1,20 @@
+# Use the stable Flutter image
+FROM ghcr.io/cirruslabs/flutter:stable
+
+# Set working directory
+WORKDIR /app
+
+# Install Linux tools
+RUN sudo apt-get update && sudo apt-get install -y     clang     cmake     ninja-build     pkg-config     libgtk-3-dev
+
+# Accept Licenses
+RUN yes | flutter doctor --android-licenses
+
+# Copy ONLY pubspec.yaml (removed pubspec.lock requirement)
+COPY pubspec.yaml ./
+
+# Get dependencies (this will generate the lockfile inside the container)
+RUN flutter pub get
+
+# Expose ports
+EXPOSE 8080 
